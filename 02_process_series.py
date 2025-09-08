@@ -155,6 +155,7 @@ def _():
 def _(
     affines,
     args,
+    np,
     output_base_path,
     pathlib,
     pixel_data,
@@ -192,7 +193,10 @@ def _(
             data=affines,
         )
 
-        group.attrs.put(row)
+        # Convert numpy scalars to Python native types for JSON serialization
+        json_compatible_row = {k: float(v) if isinstance(v, np.floating) else int(v) if isinstance(v, np.integer) else v for k, v in row.items()}
+
+        group.attrs.put(json_compatible_row)
     return
 
 

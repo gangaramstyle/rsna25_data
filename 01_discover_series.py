@@ -24,12 +24,12 @@ def _(pathlib):
         # Find NIfTI files
         nifti_files = list(root_dir.rglob('*.nii')) + list(root_dir.rglob('*.nii.gz'))
         for path in nifti_files:
-            yield path.resolve()
+            yield path
 
         # Find DICOM directories by checking all subdirectories
         dicom_dirs = list(set(p.parent for p in root_dir.rglob('*.dcm')))
         for path in dicom_dirs:
-            yield path.resolve() 
+            yield path
     return (discover_series_generator,)
 
 
@@ -46,6 +46,11 @@ def _(mo):
 
 
 @app.cell
+def _():
+    return
+
+
+@app.cell
 def _(discover_series_generator, input_dir, pathlib, pd):
     found_paths = []
     if input_dir.value and pathlib.PosixPath(input_dir.value).is_dir():
@@ -53,8 +58,15 @@ def _(discover_series_generator, input_dir, pathlib, pd):
 
         df = pd.DataFrame({
             "input_path": [str(p) for p in found_paths],
-            "zarr_name": [str(p).split('/')[-1] for p in found_paths],
+            "patient": [":".join(str(p).split('/cbica/home/gangarav/.cache/huggingface/hub/datasets--AnonRes--OpenMind/snapshots/7a1d5ce1ff35de400b7f4c0dc957a69c5b581409/OpenMind/')[-1].split('/')[:2]) for p in found_paths],
+            "zarr_name": [str(p).split('/cbica/home/gangarav/.cache/huggingface/hub/datasets--AnonRes--OpenMind/snapshots/7a1d5ce1ff35de400b7f4c0dc957a69c5b581409/OpenMind/')[-1].replace('/', ':') for p in found_paths],
         })
+
+        # df = pd.DataFrame({
+        #     "input_path": [str(p) for p in found_paths],
+        #     "patient": [str(p).split('/cbica/home/gangarav/.cache/huggingface/hub/datasets--FOMO25--FOMO-MRI/snapshots/cd7f40948e99e6c562cacf1c5255305f923480c2/fomo-60k/')[-1].split('/')[0] for p in found_paths],
+        #     "zarr_name": [str(p).split('/cbica/home/gangarav/.cache/huggingface/hub/datasets--FOMO25--FOMO-MRI/snapshots/cd7f40948e99e6c562cacf1c5255305f923480c2/fomo-60k/')[-1].replace('/', ':') for p in found_paths],
+        # })
 
     df
     return (df,)

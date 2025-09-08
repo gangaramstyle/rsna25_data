@@ -13,7 +13,6 @@ def _():
 
     # Read environment variables passed from sbatch
     TASK_ID = int(os.environ['SLURM_ARRAY_TASK_ID'])
-    INPUT_BASE_PATH = os.environ['INPUT_BASE_PATH']
     OUTPUT_ZARR_ROOT = os.environ['OUTPUT_ZARR_ROOT']
     SERIES_CSV = os.environ['SERIES_CSV']
 
