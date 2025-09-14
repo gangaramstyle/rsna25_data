@@ -23,7 +23,7 @@ def _():
 @app.cell
 def _(pathlib, pd, zarr):
     def OpenMind_aggregator():
-        base_zarr_path = '/cbica/home/gangarav/brain_processed/'
+        base_zarr_path = '/cbica/home/gangarav/nifti_brain/'
         openmind_df = pd.read_csv('./OpenMind_series_to_process.csv')
         metadatas = []
         for _, row in openmind_df.iterrows():
@@ -33,25 +33,24 @@ def _(pathlib, pd, zarr):
                 metadata = dict(zarr_group.attrs)
                 metadata["patient_id"] = row['patient']
                 metadata["series_uid"] = row['zarr_name']
-            
+
                 parts = row['zarr_name'].split(':')
                 if len(parts) > 2 and 'ses' in parts[2]:
                     metadata["study_uid"] = parts[2]
-            
+
                 metadata["modality"] = "MR"
                 metadatas.append(metadata)
             else:
                 print(row)
         metadata_df = pd.DataFrame(metadatas)
         return metadata_df
-
     return (OpenMind_aggregator,)
 
 
 @app.cell
 def _(pathlib, pd, zarr):
     def FOMO_aggregator():
-        base_zarr_path = '/cbica/home/gangarav/brain_processed/'
+        base_zarr_path = '/cbica/home/gangarav/nifti_brain/'
         openmind_df = pd.read_csv('./FOMO_series_to_process.csv')
         metadatas = []
         for _, row in openmind_df.iterrows():
@@ -65,21 +64,20 @@ def _(pathlib, pd, zarr):
                 parts = row['zarr_name'].split(':')
                 if len(parts) > 1 and 'ses' in parts[1]:
                     metadata["study_uid"] = parts[1]
-            
+
                 metadata["modality"] = "MR"
                 metadatas.append(metadata)
             else:
                 print(row)
         metadata_df = pd.DataFrame(metadatas)
         return metadata_df
-
     return (FOMO_aggregator,)
 
 
 @app.cell
 def _(pathlib, pd, zarr):
     def RSNA_aggregator():
-        base_zarr_path = '/cbica/home/gangarav/brain_processed/'
+        base_zarr_path = '/cbica/home/gangarav/nifti_brain/'
         openmind_df = pd.read_csv('./series_to_process.csv')
         metadatas = []
         for _, row in openmind_df.iterrows():
@@ -88,12 +86,12 @@ def _(pathlib, pd, zarr):
                 zarr_group = zarr.open(zarr_path, mode='r')
                 metadata = dict(zarr_group.attrs)
                 metadata["series_uid"] = row['zarr_name']
+                metadata["original_format"] = 'dicom'
                 metadatas.append(metadata)
             else:
                 print(row)
         metadata_df = pd.DataFrame(metadatas)
         return metadata_df
-
     return (RSNA_aggregator,)
 
 
@@ -110,7 +108,7 @@ def _(FOMO_aggregator, OpenMind_aggregator, RSNA_aggregator, pd):
 
 @app.cell
 def _(combined_df):
-    combined_df.to_parquet('combined_metadata.parquet', index=False)
+    combined_df.to_parquet('nifti_combined_metadata.parquet', index=False)
     return
 
 

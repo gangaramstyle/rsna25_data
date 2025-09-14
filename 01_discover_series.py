@@ -58,9 +58,15 @@ def _(discover_series_generator, input_dir, pathlib, pd):
 
         df = pd.DataFrame({
             "input_path": [str(p) for p in found_paths],
-            "patient": [":".join(str(p).split('/cbica/home/gangarav/.cache/huggingface/hub/datasets--AnonRes--OpenMind/snapshots/7a1d5ce1ff35de400b7f4c0dc957a69c5b581409/OpenMind/')[-1].split('/')[:2]) for p in found_paths],
-            "zarr_name": [str(p).split('/cbica/home/gangarav/.cache/huggingface/hub/datasets--AnonRes--OpenMind/snapshots/7a1d5ce1ff35de400b7f4c0dc957a69c5b581409/OpenMind/')[-1].replace('/', ':') for p in found_paths],
+            "patient": [str(p).split('/')[-1] for p in found_paths],
+            "zarr_name": [str(p).split('/')[-1] for p in found_paths],
         })
+
+        # df = pd.DataFrame({
+        #     "input_path": [str(p) for p in found_paths],
+        #     "patient": [":".join(str(p).split('/cbica/home/gangarav/.cache/huggingface/hub/datasets--AnonRes--OpenMind/snapshots/7a1d5ce1ff35de400b7f4c0dc957a69c5b581409/OpenMind/')[-1].split('/')[:2]) for p in found_paths],
+        #     "zarr_name": [str(p).split('/cbica/home/gangarav/.cache/huggingface/hub/datasets--AnonRes--OpenMind/snapshots/7a1d5ce1ff35de400b7f4c0dc957a69c5b581409/OpenMind/')[-1].replace('/', ':') for p in found_paths],
+        # })
 
         # df = pd.DataFrame({
         #     "input_path": [str(p) for p in found_paths],
@@ -88,6 +94,11 @@ def _(mo):
 def _(df, output_filename):
     if output_filename.value:
         df.to_csv(output_filename.value, index=False)
+    return
+
+
+@app.cell
+def _():
     return
 
 

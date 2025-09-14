@@ -39,7 +39,7 @@ def _(OUTPUT_ZARR_ROOT, series_path, zarr_name):
     # Construct the command to run the main processing script
     command = [
         "python",
-        "02_process_series.py",
+        "025_process_series.py",
         "--series-path", series_path,
         "--zarr-name", zarr_name,
         "--output-base-path", OUTPUT_ZARR_ROOT

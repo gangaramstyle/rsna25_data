@@ -11,8 +11,8 @@
 # --- Configuration ---
 # Set these paths to your actual directories
 cd /cbica/home/gangarav/rsna_any/rsna_2025
-export OUTPUT_ZARR_ROOT="/cbica/home/gangarav/brain_processed"
-export SERIES_CSV="FOMO_series_to_process.csv"
+export OUTPUT_ZARR_ROOT="/cbica/home/gangarav/nifti_brain"
+export SERIES_CSV="OpenMind_series_to_process.csv"
 
 # --- Setup ---
 # Create log directory if it doesn't exist
